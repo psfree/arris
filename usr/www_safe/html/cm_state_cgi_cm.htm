@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Touchstone Registration Status</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Registration Status</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+
+        <b>CM State:</b><?CM_STATE><br>
+
+<table border="1">
+<tbody>
+		  <tr valign="top">
+			 <td width="500">Docsis-Downstream Scanning</td>
+			 <td align="center" width="270"><?DOC_DS_SCAN></td>
+		  </tr>
+		  <tr valign="top">
+			 <td width="500">Docsis-Downstream Ranging</td>
+			 <td align="center" width="270"><?DOC_DS_RNG></td>
+		  </tr>
+		  <tr valign="top">
+			 <td width="500">Docsis-Upstream Ranging</td>
+			 <td align="center" width="270"><?DOC_US_RNG></td>
+		  </tr>
+		  <tr valign="top">
+			 <td width="500">Docsis-DHCP</td>
+			 <td align="center" width="270"><?DOC_DHCP></td>
+		  </tr>
+		  <tr valign="top">
+			 <td width="500">Docsis-TFTP</td>
+			 <td align="center" width="270"><?DOC_TFTP></td>
+		  </tr>
+		  <tr valign="top">
+			 <td width="500">Docsis-Data Reg Complete</td>
+			 <td align="center" width="270"><?DOC_DATA_REG></td>
+		  </tr>
+		</tbody>
+	 </table>
+
+	 <br><b>TOD State:</b><br>
+	 <table border="1">
+		<tbody>
+		  <tr valign="top">
+			 <td align="left" width="500">Time of Day</td>
+			 <td align="center" width="270"><?TOD_STATE></td>
+		  </tr>
+		</tbody>
+	 </table>
+
+	 <br><b>BPI State:</b><br>
+	 <table border="1">
+		<tbody>
+		  <tr valign="top">
+			 <td align="left" width="500">BPI Status</td>
+			 <td align="center" width="270"><?BPI_STATE></td>
+		  </tr>
+		</tbody>
+	 </table>
+
+	 <br><b>DHCP Attempts to obtain CM IP Address:</b><br>
+
+	 <table border="1">
+		<tbody>
+		  <tr valign="top">
+			 <td align="left" width="500">Attempt(s)</td>
+			 <td align="center" width="270"><?DHCPv4_ATTEMPTS></td>
+		  </tr>
+		  <tr valign="top">
+			 <td align="left" width="500">Attempt(s)</td>
+			 <td align="center" width="270"><?DHCPv6_ATTEMPTS></td>
+		  </tr>
+		</tbody>
+	 </table>	
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div> </body> 
+</html> 
+
+

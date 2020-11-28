@@ -1,0 +1,30 @@
+# This file contains the configuration information for the agent
+
+# Each entry consists of a keyword followed by a parameter string.
+# The keyword must begin in the first position and the parameters
+# are separated from the keyword and from one another by whitespace.
+# Case in keywords is ignorred.
+# Each entry must be contained on a single line.
+# All text following (and including) a '#' character is ignorred.
+
+# Keywords currently supported are:
+#
+#  sysdescr	-- The value to be used to answer queries for sysDescr
+#  syscontact	-- The value to be used to answer queries for sysContact
+#  syslocation	-- The value to be used to answer queries for sysLocation
+#  trap		-- The parameter names one or more hosts to receive traps.
+#  read-community -- The community name to get read access
+#  write-community -- The community name to get write access (implies
+#		      read access.)
+#  trap-community -- The community name to be used in traps.
+#  nv-file -- The file name to be used to read V3 non-volatile information
+
+#sysdescr        ARRIS DOCSIS 3.0 Touchstone Telephony Modem <<HW_REV: 2.0; VENDOR: Arris Interactive, L.L.C.; BOOTR: 1.2; SW_REV: 7.0.4; MODEL: TM702G>>
+syscontact	ARRIS Interactive, L.L.C.
+sysLocation	ARRIS USA
+read-community	public
+write-community	private
+trap-community	SNMP-trap
+nv-file     /etc/snmp_cm_nv.txt
+
+

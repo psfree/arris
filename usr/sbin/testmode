@@ -1,0 +1,85 @@
+# !/bin/sh
+
+check_and_report()
+{
+if [ $? -eq 0 ]; then
+echo "DONE";\
+else
+echo -e "\n\n**** FAILED to start Test Mode ****\n\n"
+exit 1
+fi
+}
+
+echo -e "\n*************************************"
+echo "    Starting Test Mode"
+echo -e "*************************************\n"
+
+# ARRIS start watchdog here in testmode instead of multiple places in rcS script
+echo -n "Starting watchdog... "
+/usr/sbin/watchdog_rt -t 15 /dev/watchdog
+check_and_report
+# END ARRIS
+
+echo -n "Installing Logger service... "
+/usr/sbin/logger
+check_and_report
+
+echo -n "Installing GP-Timer service... "
+/usr/sbin/gptimer &
+check_and_report
+
+echo -n "Installing DOCSIS bridge kernel module... "
+insmod /lib/modules/2.6.18_pro500/drivers/net/docsis_bridge.ko
+check_and_report
+
+echo -n "Installing CNI kernel module... "
+insmod /lib/modules/2.6.18_pro500/drivers/net/avalanche_cnid.ko
+check_and_report
+
+echo -n "Initializing DOCSIS driver... "
+/usr/sbin/docsis_init_once
+check_and_report
+
+echo -n "Installing VLYNQ kernel module... "
+insmod /lib/modules/2.6.18_pro500/drivers/char/hal_vlynq.ko
+check_and_report
+sleep 1
+
+echo -n "Installing SOC Interface kernel module... "
+insmod /lib/modules/2.6.18_pro500/drivers/char/soc_if_driver.ko
+check_and_report
+mknod /dev/soc_if_driver c 36 0
+
+echo -n "Installing DOCSIS Manager kernel module... "
+insmod /lib/modules/2.6.18_pro500/drivers/char/docsis_mng.ko
+check_and_report
+mknod /dev/docsis_mng c 32 0
+
+echo -n "Installing Interrupt handler kernel module... "
+insmod /lib/modules/2.6.18_pro500/drivers/char/kintr.ko
+check_and_report
+
+echo -n "Initializing HAL Command Mailbox application... "
+hal_cmd_mbox &
+check_and_report
+
+echo -n "Initializing HAL Event Mailbox application... "
+hal_event_mbox &
+check_and_report
+sleep 1
+
+echo -n "Initializing Interrupt handler application... "
+mlx -d DOCINT -n 6 &
+check_and_report
+
+echo -n "Initializing Tuner manager application... "
+hal_tuner_mgr &
+check_and_report
+
+echo -e "\n**** Test mode initialization completed ****\n"
+# ARRIS CHANGE
+#exec /usr/sbin/cli
+
+# Run Arris Init process
+arris_init
+# END ARRIS CHANGE

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Password Request</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+    <meta http-equiv=Content-Language content=en-us>
+    <link rel="stylesheet" href="/arris_style.css">
+	 <script type="text/javascript">
+    function setFocus()
+    {
+        document.getElementById("pwd").focus();
+    }
+    </script>
+</head>
+
+<body onload="setFocus()">
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Advanced Login</h1>
+	</div>
+	</div>
+
+    <div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+        <hr align="left" noshade="noshade" size="3" width="770">
+        <form method="post" action="adv_pwd_cgi">In order to access advanced features you must enter the password of the day:<p>Password <input name="pwd" size="11" type="password">
+            <font color="#ff0000"><?PWD_RESULT></font>
+            </p><p><input value="Send" type="submit"> <input value="Clear" type="reset">
+            </p>
+        </form>
+        <?DATE><br>
+        <A HREF="javascript:javascript:history.go(-1)">Back</A>
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+

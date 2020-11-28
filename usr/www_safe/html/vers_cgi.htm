@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Touchstone HW/FW Versions</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>HW/FW Versions</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+
+<table bgcolor="#0c055c" cellpadding="0" cellspacing="0" cols="1" width="770">
+       <tbody><tr><td width="770"><b><font color="#ffffff" size="+1">&nbsp;Hardware Information
+       </font></b></td></tr></tbody></table>
+<table cellpadding="0" cellspacing="0">
+<tbody>
+<tr><td colspan="2" height="2" width="770"></td></tr>
+<tr valign="top">
+			 <td width="170">System: </td>
+			 <td width="600"><?CM_HW_INFO><br>
+			 HW_REV: <?CM_HW_REV><br> 
+			 VENDOR: <?CM_VENDOR><br>
+			 BOOTR: <?CM_BOOT_REV><br> 
+			 SW_REV: <?CM_SW_REV><br>
+			 MODEL: <?CM_PROD_TYPE></td>
+</tr>
+
+<!--
+<tr valign="top">
+			 <td width="170">Product Type:</td>
+			 <td><?CM_PROD_TYPE></td>
+</tr>
+<tr valign="top">
+			 <td width="170">Product Release:</td>
+			 <td><?CM_PROD_REL></td>
+</tr>
+<tr valign="top">
+			 <td width="170">Flash Part:</td>
+			 <td><?CM_FLASH_PART></td>
+</tr>
+<tr valign="top">
+			 <td width="170">Download Revision:</td>
+			 <td><?CM_DOWNLOAD_REV></td>
+</tr>
+<tr valign="top">
+			 <td width="170">Firmware Revision:</td>
+			 <td><?CM_FW_REV></td>
+</tr>
+-->
+
+<tr>
+			 <td>Serial Number:</td>
+			 <td><?CM_SERIALNUM></td>
+</tr>
+<tr valign="top">
+			 <td width="170"><?CM_CHARGER_FW_LABEL></td>
+			 <td><?CM_CHARGER_FW></td>
+</tr>
+<tr>
+			 <td>Options:</td>     
+			 <td><?CM_OPTIONS></td>
+</tr>
+</tbody>
+ </table>
+
+<!--
+<br><table bgcolor="#0c055c" cellpadding="0" cellspacing="0" cols="1" width="770">
+		<tbody>
+		  <tr>
+			 <td width="770"><b><font color="#ffffff" size="+1">&nbsp;MTA Hardware Information</font></b></td>
+		  </tr>
+		</tbody>
+	 </table>
+
+    <table cellpadding="0" cellspacing="0">
+		<tbody>
+		  <tr>
+			 <td width="160"></td>
+		  </tr>
+		  <tr>
+			 <td>Mta Serial Number</td>
+			 <td><?MTA_SER_NO></td>
+		  </tr>
+		  <tr>
+			 <td>Mta Type Identifier</td>
+			 <td></td>
+		  </tr>
+		</tbody>
+	 </table><br>
+-->
+	 
+	 <table bgcolor="#0c055c" cellpadding="0" cellspacing="0" cols="1" width="770"><tbody><tr>
+    <td width="770"><b><font color="#ffffff" size="+1"> &nbsp;Firmware Build and Revisions </font></b></td></tr></tbody></table>
+    <table cellpadding="0" cellspacing="0">
+    <tbody><tr><td width="160">Firmware Name:</td><td><?CM_FW_NAME></td></tr>
+    <tr><td>Firmware Build Time:   </td><td><?CM_FW_DATE></td></tr>
+    <?ESAFE_VERS_TABLE_ENTRIES>
+    </tbody></table>
+
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+

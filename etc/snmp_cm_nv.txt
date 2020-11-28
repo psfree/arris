@@ -1,0 +1,717 @@
+;/* $Header: /usr/cvsroot/target/src/wrn/wm/demo/snmptalk/snmp_nv.txt,v 1.2 2002/05/23 18:51:13 josh Exp $ */
+;
+;/****************************************************************************
+; *
+; *  *** Restricted Rights Legend ***
+; *
+; *  The programs and information contained herein are licensed only
+; *  pursuant to a license agreement that contains use, reverse
+; *  engineering, disclosure, and other restrictions; accordingly, it
+; *  is "Unpublished--all rights reserved under the applicable
+; *  copyright laws".
+; *
+; *  Use duplication, or disclosure by the Government is subject to
+; *  restrictions as set forth in subparagraph (c)(1)(ii) of the Rights
+; *  in Technical Data and Computer Licensed Programs clause of DFARS
+; *  52.227 7013.
+; *
+; *  Copyright 2000-2001 Wind River Systems, Inc.
+; *  Copyright 1998 Integrated Systems, Inc.
+; *  All rights reserved.
+; *
+; *  *** Government Use ***
+; *
+; *  The Licensed Programs and their documentation were developed at
+; *  private expense and no part of them is in the public domain.
+; *
+; *  The Licensed Programs are "Restricted Computer Software" as that
+; *  term is defined in Clause 52.227-19 of the Federal Acquisition
+; *  Regulations (FAR) and are "Commercial Computer Software" as that
+; *  term is defined in Subpart 227.401 of the Department of Defense
+; *  Federal Acquisition Regulation Supplement (DFARS).
+; *
+; *  (i) If the licensed Programs are supplied to the Department of
+; *      Defense (DoD), the Licensed Programs are classified as
+; *      "Commercial Computer Software" and the Government is acquiring
+; *      only "restricted rights" in the Licensed Programs and their
+; *      documentation as that term is defined in Clause 52.227
+; *      7013(c)(1) of the DFARS, and
+; *
+; *  (ii) If the Licensed Programs are supplied to any unit or agency
+; *      of the United States Government other than DoD, the
+; *      Government's rights in the Licensed Programs and their
+; *      documentation will be as defined in Clause 52.227-19(c)(2) of
+; *      the FAR.
+; ****************************************************************************/
+;
+;
+; An example configuration file for use with the non volatile memory scheme
+; in Envoy 9.0
+;
+; There are several sections to the file, the preamble contains information
+; about the whole file (currently this is the version stamp).
+; Each other block contains information about the named
+; section of the database.  Logically each block is composed of a series
+; of entries with each entry starting with an identifer and ending with
+; the identifer for the next entry or the beginning of the next block.
+; The order of fields within an entry doesn't matter.  Fields that
+; aren't included are set to the default value as sepcified by its mib
+;
+; The current list of blocks is:
+; RFC1445 view table: 1445view
+; RFC2275 view table: 2275view
+; usec code (experimental) : myagent, agent, access, context, user
+; v3 code  : v3myengine, v3engines, v3user, v3group, v3access,
+;            v3targetaddr, v3targetparams, v3notify, v3notifyprofile,
+;            v3notifyfilter
+;
+; Comments are allowed anywhere however if the file is rewritten (which
+; the nv code will do if allowed) comments that appear in a block after
+; a field descriptior will be removed.  Symbolic names are not allowed (yet).
+;
+[etc preamble]
+version = 1
+
+;********
+;* VIEW *
+;********
+[etc 2275view]
+; identity	required, name of family followed by subtree (one.1.3.6)
+; status	required
+; storage	3 (non volatile)
+; mask		0
+; type		1 (view included)
+;
+
+; *************** software loopback interface view *******************
+; view for software loopback:
+identity = swLBView:1
+status = 1
+storage = 4
+type = 1
+
+; ************** Set write view for SNMP before registration empty ECN-02155 ****************
+; * Exclude iso: *
+identity = docsisWriteCpeView:1
+status = 1
+storage = 4
+type = 2
+
+; * Include modemProdMibAccessControl: *
+identity = docsisWriteCpeView:1.3.6.1.4.1.294.1.400.2.1.2.1
+status = 1
+storage = 4
+type = 1
+
+; ARRIS ADD BEGIN
+; * Include arrisCmDoc30ResetFactoryDefaults: *
+identity = docsisWriteCpeView:1.3.6.1.4.1.4115.1.3.4.1.1.6
+status = 1
+storage = 4
+type = 1
+
+; * Include arrisCmDoc30AccessTelnetPassword: *
+identity = docsisWriteCpeView:1.3.6.1.4.1.4115.1.3.4.1.2.1
+status = 1
+storage = 4
+type = 1
+
+; * Include arrisCmDoc30AccessTelnetEnable: *
+identity = docsisWriteCpeView:1.3.6.1.4.1.4115.1.3.4.1.2.2
+status = 1
+storage = 4
+type = 1
+
+; * Include arrisCmDoc30AccessSSHEnable: *
+identity = docsisWriteCpeView:1.3.6.1.4.1.4115.1.3.4.1.2.10
+status = 1
+storage = 4
+type = 1
+; ARRIS ADD END
+
+
+
+; ****************** view for SNMP V1 V2c view **********************
+; used when CM is not operational or in NM-Access mode.
+; * internet: *
+identity = snmpv12View:1.3.6.1
+status = 1
+storage = 4
+type = 1
+
+; * Exclude snmpUsmDHObjectsMIB: *
+identity = snmpv12View:1.3.6.1.3.101
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpFrameworkMIB: *
+identity = snmpv12View:1.3.6.1.6.3.10
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpMPDMIB: *
+identity = snmpv12View:1.3.6.1.6.3.11
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpTargetMIB: *
+identity = snmpv12View:1.3.6.1.6.3.12
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpNotificationMIB: *
+identity = snmpv12View:1.3.6.1.6.3.13
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpUsmMIB: *
+identity = snmpv12View:1.3.6.1.6.3.15
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpVacmMIB: *
+identity = snmpv12View:1.3.6.1.6.3.16
+status = 1
+storage = 4
+type = 2
+
+; * Exclude snmpCommunityMIB: *
+identity = snmpv12View:1.3.6.1.6.3.18
+status = 1
+storage = 4
+type = 2
+
+
+; *************** dhKickRestricted *******************
+; * system: *
+identity = dhKickRestricted:1.3.6.1.2.1.1
+status = 1
+storage = 4
+type = 1
+
+; * usmDHKickstartTable: *
+identity = dhKickRestricted:1.3.6.1.3.101.1.2.1
+status = 1
+storage = 4
+type = 1
+
+; *************** dhKickWriteView *******************
+; * internet: *
+identity = dhKickWriteView:1.3.6.1
+status = 1
+storage = 4
+type = 2
+
+
+
+; *************** docsisManagerView *******************
+; * internet: *
+identity = docsisManagerView:1.3.6.1
+status = 1
+storage = 4
+type = 1
+
+
+; *************** docsisOperatorWriteView *******************
+; * docsDevBase: *
+identity = docsisOperatorWriteView:1.3.6.1.2.1.69.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsDevSoftware: *
+identity = docsisOperatorWriteView:1.3.6.1.2.1.69.1.3
+status = 1
+storage = 4
+type = 1
+
+; * docsDevEvControl: *
+identity = docsisOperatorWriteView:1.3.6.1.2.1.69.1.5.1
+status = 1
+storage = 4
+type = 1
+
+; * docsDevEvThrottleAdminStatus: *
+identity = docsisOperatorWriteView:1.3.6.1.2.1.69.1.5.3
+status = 1
+storage = 4
+type = 1
+
+
+
+; *************** docsisMonitorView *******************
+; * system: *
+identity = docsisMonitorView:1.3.6.1.2.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsIfBaseObjects: *
+identity = docsisMonitorView:1.3.6.1.2.1.10.127.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsIfCmObjects: *
+identity = docsisMonitorView:1.3.6.1.2.1.10.127.1.2
+status = 1
+storage = 4
+type = 1
+
+
+; *************** docsisUserView *******************
+; * system: *
+identity = docsisUserView:1.3.6.1.2.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsDevBase: *
+identity = docsisUserView:1.3.6.1.2.1.69.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsDevSwOperStatus: *
+identity = docsisUserView:1.3.6.1.2.1.69.1.3.4
+status = 1
+storage = 4
+type = 1
+
+; * docsDevSwCurrentVers: *
+identity = docsisUserView:1.3.6.1.2.1.69.1.3.5
+status = 1
+storage = 4
+type = 1
+
+; * docsDevServerConfigFile: *
+identity = docsisUserView:1.3.6.1.2.1.69.1.4.5
+status = 1
+storage = 4
+type = 1
+
+; * docsDevEventTable: *
+identity = docsisUserView:1.3.6.1.2.1.69.1.5.8
+status = 1
+storage = 4
+type = 1
+
+; * docsDevCpeTable: *
+identity = docsisUserView:1.3.6.1.2.1.69.1.7.3
+status = 1
+storage = 4
+type = 1
+
+; * docsIfUpstreamChannelTable: *
+identity = docsisUserView:1.3.6.1.2.1.10.127.1.1.2
+status = 1
+storage = 4
+type = 1
+
+; * docsIfDownstreamChannelTable: *
+identity = docsisUserView:1.3.6.1.2.1.10.127.1.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsIfSignalQualityTable: *
+identity = docsisUserView:1.3.6.1.2.1.10.127.1.1.4
+status = 1
+storage = 4
+type = 1
+
+; * docsIfCmStatusTable: *
+identity = docsisUserView:1.3.6.1.2.1.10.127.1.2.2
+status = 1
+storage = 4
+type = 1
+
+;   ********************  docsisCpeView   ********************
+; * enterprises: *
+identity = docsisCpeView:1.3.6.1.4.1
+status = 1
+storage = 4
+type = 1
+
+; * exclude cableLabs from enterprises: *
+identity = docsisCpeView:1.3.6.1.4.1.4491
+status = 1
+storage = 4
+type = 2
+
+; * docsIfDownChannelFrequency: *
+identity = docsisCpeView:1.3.6.1.2.1.10.127.1.1.1.1.2
+status = 1
+storage = 4
+type = 1
+
+; * docsIfDownChannelPower: *
+identity = docsisCpeView:1.3.6.1.2.1.10.127.1.1.1.1.6
+status = 1
+storage = 4
+type = 1
+
+; * docsIf3CmStatusValue: *
+identity = docsisCpeView:1.3.6.1.4.1.4491.2.1.20.1.1.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsDevEventTable: *
+identity = docsisCpeView:1.3.6.1.2.1.69.1.5.8
+status = 1
+storage = 4
+type = 1
+
+; * sysdescr: *
+identity = docsisCpeView:1.3.6.1.2.1.1.1
+status = 1
+storage = 4
+type = 1
+
+; * sysUpTime: *
+identity = docsisCpeView:1.3.6.1.2.1.1.3
+status = 1
+storage = 4
+type = 1
+
+; * ifTable: *
+identity = docsisCpeView:1.3.6.1.2.1.2.2
+status = 1
+storage = 4
+type = 1
+
+; * ifXTable: *
+identity = docsisCpeView:1.3.6.1.2.1.31.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsIfUpChannelFrequency: *
+identity = docsisCpeView:1.3.6.1.2.1.10.127.1.1.2.1.2
+status = 1
+storage = 4
+type = 1
+
+; * docsIfSignalQualityTable:  *
+identity = docsisCpeView:1.3.6.1.2.1.10.127.1.1.4
+status = 1
+storage = 4
+type = 1
+
+; * docsIfCmCmtsAddress: *
+identity = docsisCpeView:1.3.6.1.2.1.10.127.1.2.1.1.1
+status = 1
+storage = 4
+type = 1
+
+; * docsIfCmStatusTxPower: *
+identity = docsisCpeView:1.3.6.1.2.1.10.127.1.2.2.1.3
+status = 1
+storage = 4
+type = 1
+
+; * docsDevSwCurrentVers: *
+identity = docsisCpeView:1.3.6.1.2.1.69.1.3.5
+status = 1
+storage = 4
+type = 1
+
+; * docsDevServerBootState: *
+identity = docsisCpeView:1.3.6.1.2.1.69.1.4.1
+status = 1
+storage = 4
+type = 1
+
+
+
+
+[etc v3myengine]
+; the local agents id and boot information
+; engineid      flexible number of octets in hex format, if the call
+;               to the nv_config routine includes a string that string
+;               is used as the engine id otherwise the id comes from
+;               here and this field is required
+; engineboots   required, uint32_t
+; engineid = 0000000c000000007f000001
+engineid = 00000126030050f112a51801
+engineboots = 100
+
+[etc v3engines]
+;list of engines known to this entity
+; engineid      required, flexible number of octets in hex format
+
+[etc v3user]
+; engineid	required, flexible number of octets in hex format
+; username	required, flexible number of characters
+; authprot	optional int 1 = md5, 2 = sha
+; authkey       required if authprot is present
+;		hex formatted octets 16 for md5, 20 for sha
+; privport	optional int 1 = des
+; privkey	required if privprot is present, 16 octets in hex format
+; status	1 (active)
+; storage	3 (non-volatile)
+;
+;               The keys were generated and localized according to rfc2274
+;               the pass phrases were either initialmd5 or initialsha
+
+engineid = 00000126030050f112a51801
+username = dhKickstart
+status = 1
+storage = 4
+
+
+; *********
+; * GROUP *
+; *********
+[etc v3group]
+; user		required, flexible number of characters
+; model		3 (usm)
+; group		required, flexible number of characters
+; status	1 (active)
+; storage	3 (non volatile)
+
+user = dhKickstart
+model = 3
+group = dhKickstart
+status = 1
+storage = 4
+
+user = docsisManager
+model = 3
+group = docsisManager
+status = 1
+storage = 4
+
+user = docsisOperator
+model = 3
+group = docsisOperator
+status = 1
+storage = 4
+
+user = docsisMonitor
+model = 3
+group = docsisMonitor
+status = 1
+storage = 4
+
+user = docsisUser
+model = 3
+group = docsisUser
+status = 1
+storage = 4
+
+
+
+; **********
+; * ACCESS *
+; **********
+[etc v3access]
+; group		required, flexible number of characters
+; prefix	optional, flexible number of characters, default is empty
+; match		1 (exact)
+; model		3 (usm)
+; level		1 (no auth, no priv)
+; read		optional, name of read view, default is empty
+; write		optional, name of write view, default is empty
+; notify	optional, name of notify view, default is empty
+; status	1 (active)
+; storage	3 (non volatile)
+
+group = dhKickstart
+match = 1
+model = 3
+level = 1
+read = dhKickRestricted
+; write = dhKickWriteView
+notify = dhKickRestricted
+status = 1
+storage = 4
+
+group = docsisManager
+match = 1
+model = 3
+level = 3
+read = docsisManagerView
+write = docsisManagerView
+notify = docsisManagerView
+status = 1
+storage = 4
+
+group = docsisOperator
+match = 1
+model = 3
+level = 3
+read = docsisManagerView
+write = docsisOperatorWriteView
+notify = docsisManagerView
+status = 1
+storage = 4
+
+group = docsisOperator
+match = 1
+model = 3
+level = 2
+read = docsisManagerView
+write = docsisOperatorWriteView
+notify = docsisManagerView
+status = 1
+storage = 4
+
+group = docsisMonitor
+match = 1
+model = 3
+level = 3
+read = docsisMonitorView
+notify = docsisMonitorView
+status = 1
+storage = 4
+
+group = docsisMonitor
+match = 1
+model = 3
+level = 2
+read = docsisMonitorView
+notify = docsisMonitorView
+status = 1
+storage = 4
+
+group = docsisUser
+match = 1
+model = 3
+level = 3
+read = docsisUserView
+status = 1
+storage = 4
+
+group = docsisUser
+match = 1
+model = 3
+level = 2
+read = docsisUserView
+status = 1
+storage = 4
+
+[etc v3context]
+; context		required, flexible number of characters
+; 		(note that a zero length string is the default)
+context =
+
+
+[etc v3targetaddr]
+; name                  required, flexible number of characters
+; tdomain               required OID, usually 1.3.6.1.6.1.1
+; taddress              required, in form of IPAddress:port
+; timeout               optional, 32-bit value (1500 default)
+; retry                 optional, 16-bit value (3 default)
+; taglist               optional, must be in ""
+; params                required, flexible length
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+
+[etc v3targetparams]
+; name                  required, flexible number of characters
+;
+; mpmodel               required, usually 3 (SNMPv3)
+;                          0  reserved for SNMPv1
+;                          1  reserved for SNMPv2c
+;			   2  reserved for SNMPv2u and SNMPv2*
+;			   3  reserved for SNMPv3
+;
+; sec_model             required, usually 3 (USM)
+;                          0  reserved for 'any'
+;                          1  reserved for SNMPv1
+;			   2  reserved for SNMPv2c
+;                          3  User-Based Security Model (USM)
+;
+; sec_name              required, flexible number of characters
+; sec_lvl               required, 1=noauthnopriv, 2=authnopriv, 3=authpriv
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+
+[etc v3notify]
+; name                  required, flexible number of characters
+; tag                   flexible number of characters
+; type                  1 = trap, 2 = inform
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+
+[etc v3notifyprofile]
+; params_name           required, flexible number of characters
+; profile_name          required, flexible number of characters
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+;params_name = defaultV2c
+;profile_name = test_filter_profile
+;status = 1
+;storage = 3
+
+[etc v3notifyfilter]
+; profile_name          required, flexible length
+; subtree               required OID, flexible length
+; mask                  should be a hex value, flexible length
+; type                  1 = included (default), 2 = excluded
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+[etc v3proxy]
+; proxy_name            required, flexible length
+; proxy_type            1 = read, 2 = write, 3 = trap, 4 = inform
+; context_engine_id     engine id to be proxied
+; context_name          context name to be proxied
+; target_params_in      targets to proxy from
+; single_target_out     where to forward Gets, Nexts, Sets, and GetBulks
+; multiple_target_out   where to forward Traps and Informs
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+[etc community]
+; index                 required, flexible length
+; name                  flexible length string
+; sec_name              security-model independent username
+; context_engine_id     flexible number of octets in hex format
+;                       (defaults to own engine id)
+; context_name          flexible length string
+; transport_tag         flexible length string
+; status                1 (active)
+; storage               3 (nonvolatile)
+
+
+[etc entlogic]
+; index                 required, must come first, integer value
+; descr                 text description of logical entity
+; type                  OID indicating the major MIB module supported
+; community             community string used for this entity (deprecated)
+; taddress              address for this entity (IP Addr:port)
+; tdomain               OID, indicates format of taddress
+; context_engine_id     context engine id for this entity
+; context_name          context name for this entity
+
+
+[etc v3trap]
+; trap_name             required, flexible length, must come first
+; vb_count              required, # vbs in trap, must come second, >= 2
+; object_type           type of object in varbind
+; object_oid            oid of object in varbind
+; object_value          value of object in varbind
+; NOTE:  A proper trap definition will include a trap_name, a vb_count,
+;        and then vb_count iterations of object_type, object_oid, and
+;        object_value (with object_value coming last each time).
+
+

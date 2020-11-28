@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>QoS Statistics</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>QoS Statistics</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+    <TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c><TBODY>
+    <TR>
+    <TD width=770><B><FONT color=#ffffff size=+1>&nbsp;QoS</FONT></B></TD></TR></TBODY></TABLE>
+    <table border ="1" width="660"><tr><td width="89" align="center">SFID</td>
+            <td width="216" align="center"> Service Class Name</td><td width="134" align="center"> Direction</td>
+            <td width="99" align="center"> Primary Flow</td><td width="88" align="center"> Packets</td></tr>
+        <?SERVICE_FLOW_DATA>
+    </table>
+
+    <table>
+        <tr valign="top"><td><a href="dsx_cgi">Show DSX Log</a></td></tr>
+    </table>
+    <table>
+        <form method="post" action="qos_cgi">
+            <tr><td><input type="submit" <?DSX_LOG_STATUS>></td>
+                <td><input type="submit" name="dsxClear" value="Clear"></td></tr>
+        </form>
+    </table>
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+

@@ -1,0 +1,167 @@
+#!/bin/sh
+
+usage="Usage : "${0}"\n"\
+"\t[-D{Downstream Channels} (-1|1|2|3|4|5|6|7|8)]\n"\
+"\t[-U{Uptream Channels} (-1|1|2|3|4)]\n"\
+"\t[-T{Transmit Channel  (UCID)} (1|2|3|...)]\n"\
+"\t[-u{Try TCC even when there is no RCC}]\n"\
+"\t[-F{First DS freq} freq-Hz]\n"\
+"\t[-s{DOCSIS shmdb size} size]\n"\
+"\t[-c{DOCSIS shmdb chunks} num]\n"\
+"\t[-P{Primary SAID Zero in auth req}]\n"\
+"\t[-I{Override IP mode : IPv4, IPv6, APM, Dual} {4|6|A|D}]\n"\
+"\t[-o{Override SID before REG-ACK} {0-4}]\n"\
+"\t[-M{Set MAC address} {xx:xx:xx:xx:xx:xx}]\n"\
+"\t[-A{Set Docsis auto run option} (1|0)]\n"\
+"\t[-g{Set Debug options}]\n"\
+"\t[-G{Set a single Debug option}]\n"\
+"\t[-J{Clear a single Debug option}]\n"\
+"\t[-Y{Set Primary DS Port}]\n"\
+"\t[-d{Set DS Ports For Docsis]\n"\
+
+while getopts ":D:U:T:us:c:PF:I:o:M:A:g:G:J:Y:d:m" options; do
+  case $options in
+    D ) ds_channels=$OPTARG;;
+    U ) us_channels=$OPTARG;;
+    u ) force_tcc="-force_tcc";;
+    s ) shmdb_size=$OPTARG;;
+    c ) shmdb_chunks=$OPTARG;;
+    P ) bpi_param="-NoPrimSaidZero";;
+    F ) firstfreq=$OPTARG;;
+    T ) firstus=$OPTARG;;
+    I ) ipmode=$OPTARG;;
+    o ) sid_override=$OPTARG;;
+    M ) MAC_address=$OPTARG;;
+    A ) docsis_auto_run=$OPTARG;;
+    g ) debug_options=$debug_options" -debug_options "$OPTARG;;
+    G ) debug1option=$debug1option" -debug1option "$OPTARG;;
+    J ) debug1option_off=$debug1option_off" -debug1option_off "$OPTARG;;
+    Y ) ds_primary_port=$OPTARG;;
+    m ) docsis_mta_flag="1";;
+    d ) ds_docsis_ports=$ds_docsis_ports" -ds_docsis_ports "$OPTARG;;
+    h ) echo -e $usage
+         exit 1;;
+    \? ) echo -e $usage
+         exit 1;;
+    * ) echo -e $usage
+          exit 1;;
+
+  esac
+done
+
+# If PCD is already active, reboot the system for changes to take effect
+if [ -n "`ps|grep pcd|grep -v grep|cut -c 1-5`" ]; then
+    echo "PCD is already active"; \
+    exit 1; \
+fi
+
+# Setup DOCSIS Initialization process parameters
+if [ -n "$MAC_address" ]; then
+    cnid_params=$cnid_params" inpmac="$MAC_address; \
+    init_once_params=$init_once_params" -MAC_address "$MAC_address; \
+fi
+if [ -n "$ds_channels" ]; then
+    init_once_params=$init_once_params" -ds_channels "$ds_channels
+fi
+if [ -n "$us_channels" ]; then
+    init_once_params=$init_once_params" -us_channels "$us_channels
+fi
+if [ -n "$force_tcc" ]; then
+    init_once_params=$init_once_params" "$force_tcc
+fi
+if [ -n "$shmdb_size" ]; then
+    init_once_params=$init_once_params" -shmdb_size "$shmdb_size
+fi
+if [ -n "$shmdb_chunks" ]; then
+    init_once_params=$init_once_params" -shmdb_chunks "$shmdb_chunks
+fi
+if [ -n "$sid_override" ]; then
+    init_once_params=$init_once_params" -sid_override "$sid_override
+fi
+if [ -n "$debug_options" ]; then
+    init_once_params=$init_once_params$debug_options
+fi
+if [ -n "$debug1option" ]; then
+    init_once_params=$init_once_params$debug1option
+fi
+if [ -n "$debug1option_off" ]; then
+    init_once_params=$init_once_params$debug1option_off
+fi
+if [ -n "$ds_primary_port" ]; then
+    init_once_params=$init_once_params" -ds_primary_port "$ds_primary_port
+fi
+if [ -n "$ds_docsis_ports" ]; then
+    init_once_params=$init_once_params$ds_docsis_ports
+fi
+if [ -n "$ipmode" ]; then
+    if [ "$ipmode" = "4" ]; then
+        init_once_params=$init_once_params" -ipv4 ";
+    elif [ "$ipmode" = "6" ]; then
+        init_once_params=$init_once_params" -ipv6 ";
+    elif [ "$ipmode" = "A" ]; then
+        init_once_params=$init_once_params" -apm ";
+    elif [ "$ipmode" = "D" ]; then
+        init_once_params=$init_once_params" -dual ";
+    fi
+fi
+# Strip leading and ending spaces
+if [ -n "$init_once_params" ]; then
+    init_once_params=`echo $init_once_params`
+fi
+
+# Setup DOCSIS MAC Driver parameters
+if [ -n "$firstfreq" ]; then
+    dmd_params=$dmd_params" -1st_freq "$firstfreq
+fi
+if [ -n "$firstus" ]; then
+    dmd_params=$dmd_params" -1st_us "$firstus
+fi
+# Strip leading and ending spaces
+if [ -n "$dmd_params" ]; then
+    dmd_params=`echo $dmd_params`
+fi
+
+if [ -n "$docsis_auto_run" ]; then
+    dmg_params=" -x "
+fi
+if [ -n "$docsis_mta_flag" ]; then
+    dmg_params=$dmg_params" -m "
+fi
+# Strip leading and ending spaces
+if [ -n "$dmg_params" ]; then
+    dmg_params=`echo $dmg_params`
+fi
+
+# Set the environment variable for init_once_params
+if [ -n "$init_once_params" ]; then
+    echo "Using DOCSIS Initialization process parameters: "$init_once_params
+    echo "$init_once_params" > /var/tmp/init_once_params
+fi
+
+# Set the environment variable for $dmd_params
+if [ -n "$dmd_params" ]; then
+    echo "Using DOCSIS MAC Driver parameters: "$dmd_params ; \
+    echo "$dmd_params" > /var/tmp/dmd_params ; \
+fi
+
+# Set the environment variable for $dmg_params
+if [ -n "$dmg_params" ]; then
+    echo "Using DOCSIS MAC Manager parameters: "$dmg_params ; \
+    echo "$dmg_params" > /var/tmp/dmg_params ; \
+fi
+
+# In case running not in stand alone mode
+if [ -z "$docsis_auto_run" ]; then
+
+    # Kill the current watchdog, and let PCD start and monitor it
+    rtwd=`ps|grep watchdog_rt|grep -v grep|cut -c 1-5`
+
+    if [ -n "$rtwd" ]; then
+        kill -9 $rtwd ; \
+    fi
+
+    # Spawn PCD, start the system
+    # the filename below is hardcoded in sys_cli.c, so if it changes here it must be changed there too
+    /usr/sbin/pcd -f /etc/scripts/dsdk.pcd -v -t 20 -e /nvram/pcd_error_log.txt & # ARRIS remove -d (debugMode)
+fi
+

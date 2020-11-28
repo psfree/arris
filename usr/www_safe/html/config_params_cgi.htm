@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Configuration Parameters</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Configuration Parameters</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+    <table>
+          <tr valign="top"><td>CM Config File:</td><td><?CM_CONFIG_FILE></td></tr>
+          <?MTA_CONFIG_FILE>
+        <table width="770"><tr><td>
+                    <font size="+2" color="red">Warning:</font> The modem does not store copies of its configuration files. Below
+                            you will find the currently used values of parameters commonly set using these files.  The files may or may not set these values or 
+                                    contain additional information. This information is listed for convenience only.</td></tr></table>
+                        <br>
+                        <a name="cm"><br></a>
+
+                        <TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c><TBODY><TR>
+
+                            <TD width=770><B><FONT color=#ffffff size=+1>
+                            &nbsp;Common CM Config Parameters
+                            </FONT></B></TD></TR></TBODY></TABLE>
+                            <pre>
+NetworkAccess = <?NETWORK_ACCESS>
+UpgradeServer = <?UPGRADE_SERVER>
+MaxCpeAllowed = <?MAX_CPE>
+PrivacyEnable = <?PRIVACY_ENABLE>
+SnmpMib = docsDevSwAdminStatus.0 <?SW_ADMIN_STATUS>
+SnmpMib = arrisCmDoc30AccessHttpTimeout.0 <?HTTP_TIMEOUT>
+<?SERVICE_FLOW_INFO>
+<?PACKET_CLASSIFIER_INFO>
+<FONT color=#0000ff># </FONT><br><FONT color=#0000ff># Note:<i> Items assigned by CMTS are not included in the config file.</i></FONT><br><FONT color=#0000ff># &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i> PcSfId maps to Instance of docsQosServiceFlowTable.</i></FONT><br><FONT color=#0000ff># </FONT><br></pre><a name="mta"><br></a><TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c><TBODY><TR>
+
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+

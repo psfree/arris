@@ -1,0 +1,526 @@
+<html>
+<head>
+    <title>Speedtest</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+    <!--[if IE]>
+        <link rel="stylesheet" href="/arris_style_ie.css">
+    <![endif]-->
+    <script LANGUAGE="JavaScript">
+        function SetTestStatus(content)
+        {
+            document.getElementById("TestStatus").innerHTML=content;
+        }
+        function SetTestConditions(StartTime, StartLines, EndTime, EndLines, CpeEnabled)
+        {
+            document.getElementById("StartTime").innerHTML=StartTime;
+            document.getElementById("StartLines").innerHTML=StartLines;
+            document.getElementById("CpeEnabled").innerHTML=CpeEnabled;
+            document.getElementById("EndTime").innerHTML=EndTime;
+            document.getElementById("EndLines").innerHTML=EndLines;
+        }
+        function SetDnsTime(content)
+        {
+	    document.getElementById("DnsTime").innerHTML=content;
+        }
+        function SetSetupTime(content)
+        {
+            document.getElementById("SetupTime").innerHTML=content;
+        }
+        function SetTransferTime(content)
+        {
+            document.getElementById("TransferTime").innerHTML=content;
+        }
+        function SetTotalTime(content)
+        {
+            document.getElementById("TotalTime").innerHTML=content;
+        }
+        function SetPayloadTx(bytes, speed, pckts)
+        {
+            document.getElementById("PayloadTxBytes").innerHTML=bytes;
+            document.getElementById("PayloadTxSpeed").innerHTML=speed;
+            document.getElementById("PayloadTxPckts").innerHTML=pckts;
+        }
+        function SetPayloadRx(bytes, speed, pckts)
+        {
+            document.getElementById("PayloadRxBytes").innerHTML=bytes;
+            document.getElementById("PayloadRxSpeed").innerHTML=speed;
+            document.getElementById("PayloadRxPckts").innerHTML=pckts;
+        }
+        function SetFilteredTx(bytes, speed, pckts)
+        {
+            document.getElementById("FilteredTxBytes").innerHTML=bytes;
+            document.getElementById("FilteredTxSpeed").innerHTML=speed;
+            document.getElementById("FilteredTxPckts").innerHTML=pckts;
+        }
+        function SetFilteredRx(bytes, speed, pckts)
+        {
+            document.getElementById("FilteredRxBytes").innerHTML=bytes;
+            document.getElementById("FilteredRxSpeed").innerHTML=speed;
+            document.getElementById("FilteredRxPckts").innerHTML=pckts;
+        }
+        function SetTotalTx(bytes, speed, pckts)
+        {
+            document.getElementById("TotalTxBytes").innerHTML=bytes;
+            document.getElementById("TotalTxSpeed").innerHTML=speed;
+            document.getElementById("TotalTxPckts").innerHTML=pckts;
+        }
+        function SetTotalRx(bytes, speed, pckts)
+        {
+            document.getElementById("TotalRxBytes").innerHTML=bytes;
+            document.getElementById("TotalRxSpeed").innerHTML=speed;
+            document.getElementById("TotalRxPckts").innerHTML=pckts;
+        }
+        function SetErrors(tx, rx)
+        {
+            document.getElementById("ErrorTxPckts").innerHTML=tx;
+            document.getElementById("ErrorRxPckts").innerHTML=rx;
+        }
+        function SetDropped(tx, rx)
+        {
+            document.getElementById("DroppedTxPckts").innerHTML=tx;
+            document.getElementById("DroppedRxPckts").innerHTML=rx;
+        }
+        function SetTestMode(val)
+        {
+            document.config.Mode.value = val;
+        }
+        function SetTestDirection(val)
+        {
+            document.config.Direction.value = val;
+        }
+        function SetAddress(val)
+        {
+            document.config.Address.value = decodeURIComponent(val);
+        }
+        function SetPort(val)
+        {
+            document.config.Port.value = val;
+        }
+        function SetUsername(val)
+        {
+            document.config.Username.value = val;
+        }
+        function SetPassword(val)
+        {
+            document.config.Password.value = val;
+        }
+        function SetFilename(val)
+        {
+            document.config.Filename.value = decodeURIComponent(val);
+        }
+        function SetUploadSize(val)
+        {
+            document.config.UploadSize.value = val;
+        }
+        function SetUploadScript(val)
+        {
+            document.config.UploadScript.value = decodeURIComponent(val);
+        }
+        function SetUploadPostFields(val)
+        {
+            document.config.UploadPostFields.value = decodeURIComponent(val);
+        }
+        function SetUploadFileField(val)
+        {
+            document.config.UploadFileField.value = decodeURIComponent(val);
+        }
+        function SetTCPWindowSize(val)
+        {
+            document.config.TCPWindowSize.value = val;
+        }
+        function SetTCPTimeStamping(val)
+        {
+            if (val == '1')
+            {
+                document.config.TCPTimestamping.checked = true;
+            }
+            else
+            {
+                document.config.TCPTimestamping.checked = false;
+            }
+        }
+        function SetTCPMSS(val)
+        {
+            document.config.TCPMSS.value = val;
+        }
+        function SetPMTU(val)
+        {
+            if (val == '1')
+            {
+                document.config.PMTUD.checked = true;
+                document.config.MTU.disabled = true;
+            }
+            else
+            {
+                document.config.PMTUD.checked = false;
+                document.config.MTU.disabled = false;
+            }
+        }
+        function SetMTU(val)
+        {
+            document.config.MTU.value = val;
+        }
+        function SetCPEAccess(val)
+        {
+            document.config.CPEAccess.value = val;
+        }
+        function SetCurRes(val)
+        {
+            document.resultshead.CurResult.value = val;
+            document.config.CurResult.value = val;
+        }
+        function DisablePrev()
+        {
+            document.resultshead.PrevResult.disabled = true;
+        }
+        function DisableNext()
+        {
+            document.resultshead.NextResult.disabled = true;
+        }
+        function EnableMTU()
+        {
+            if (document.config.PMTUD.checked)
+            {
+                document.config.MTU.disabled = true;
+            }
+            else
+            {
+                document.config.MTU.disabled = false;
+            }
+        }
+        function EnableHTTPUpload()
+        {
+            if (document.config.Direction.value == "Upstream")
+            {
+                if (document.config.Mode.value == "HTTP")
+                {
+                    // HTTP upload - all upload fields enabled
+                    document.config.UploadSize.disabled = false;
+                    document.config.UploadScript.disabled = false;
+                    document.config.UploadPostFields.disabled = false;
+                    document.config.UploadFileField.disabled = false;
+                }
+                else
+                {
+                    // FTP upload - just upload file size enabled
+                    document.config.UploadSize.disabled = false;
+                    document.config.UploadScript.disabled = true;
+                    document.config.UploadPostFields.disabled = true;
+                    document.config.UploadFileField.disabled = true;
+                }
+            }
+            else
+            {
+                // download - all upload fields disabled
+                document.config.UploadSize.disabled = true;
+                document.config.UploadScript.disabled = true;
+                document.config.UploadPostFields.disabled = true;
+                document.config.UploadFileField.disabled = true;
+            }
+        }
+        function ModeChanged(id)
+        {
+            EnableHTTPUpload();
+        }
+        function DirectionChanged(id)
+        {
+            document.location.href = location.protocol + '//' + location.hostname + location.pathname + '?direction=' + id.value;
+        }
+        function SetAction(act)
+        {
+            document.resultshead.action = act;
+            document.config.action = act;
+        }
+        function validateForm()
+        {
+            var val;
+
+            val=document.config.Address.value;
+            if (val==null || val=="")
+            {
+                alert("No Server Address Set");
+                return false;
+            }
+
+            val=document.config.Port.value;
+            if (val==null || val=="")
+            {
+                alert("No Server Port Set");
+                return false;
+            }
+
+            val=document.config.Filename.value;
+            if (val==null || val=="")
+            {
+                alert("No Filename Set");
+                return false;
+            }
+
+            if (document.config.Mode.value == "HTTP")
+            {
+                if (document.config.Direction.value == "Upstream")
+                {
+                    // HTP UPLOAD required field check
+                    val=document.config.UploadScript.value;
+                    if (val==null || val=="")
+                    {
+                        alert("HTTP Upload requires a script to POST to");
+                        return false;
+                    }
+
+                    val=document.config.UploadSize.value;
+                    if (val==null || val=="")
+                    {
+                        alert("HTTP Upload requires a data size to upload");
+                        return false;
+                    }
+
+                    val=document.config.UploadFileField.value;
+                    if (val==null || val=="")
+                    {
+                        alert("HTTP Upload requires a fieldname to place the file data into");
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // FTP required parameters (username / password
+                val=document.config.Password.value;
+                if (val==null || val=="")
+                {
+                    alert("FTP protocol requires a password");
+                    return false;
+                }
+
+                val=document.config.UploadSize.value;
+                if (val==null || val=="")
+                {
+                    alert("FTP Upload requires a data size to upload");
+                    return false;
+                }
+
+                if (document.config.Direction.value == "Upstream")
+                {
+                    val=document.config.UploadSize.value;
+                    if (val==null || val=="")
+                    {
+                        alert("FTP Upload requires a data size to upload");
+                        return false;
+                    }
+                }
+            }
+                
+            val=document.config.TCPWindowSize.value;
+            if (val==null || val=="" || val < 63 || val > 2048)
+            {
+                alert("TCP window out of range:  Must be between 63 and 2048 kilobytes");
+                return false;
+            }
+
+            val=document.config.TCPMSS.value;
+            if (val==null || val=="" || val < 536 || val > 1500)
+            {
+                alert("TCP Max Segment Size out of range:  Must be between 536 and 1500 bytes");
+                return false;
+            }
+
+            if (!document.config.PMTUD.checked)
+            {
+                val=document.config.MTU.value;
+                if (val==null || val=="" || val < 64 || val > 1518)
+                {
+                    alert("MTU out of range:  Must be between 64 and 1518 bytes");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+
+	<div class="header">
+	    <div class="header_text">
+		<h1>Speedtest</h1>
+	    </div>
+	</div>
+
+	<div id="navbar">
+	    <ul>
+		<?ARRIS_MENU>
+	    </ul>
+	</div>
+	
+	<div class="main_body">
+	    <p>
+		<!-- INSERT ARRIS PAGE CONTENT HERE -->   
+     
+		<form name="resultshead" method="post" action=""> 
+		    <table width="770" bgColor=#0c055c><tbody>
+			<tr>
+			    <td width="530"><b><font color=#ffffff size=+1>SpeedTest Results: <span id="TestStatus"> </span></font></b></td>
+			    <td width="30"><input type="hidden" name="CurResult"  value=" "></td>
+			    <td width="30"><input type="submit" name="PrevResult" value="Prev"></td>
+			    <td width="30"><input type="submit" name="NextResult" value="Next"></td>
+			</tr>
+		    </tbody></table>
+		</form>
+
+		<table border="0" width="770">
+		    <tr>
+			<td width="770" align="left">Started: <span id="StartTime">n/a</span> <span id="StartLines"></span> <span id="CpeEnabled"></span>.</td>
+		    </tr>
+		    <tr>
+			<td width="770" align="left">Ended:   <span id="EndTime">n/a</span> <span id="EndLines"></span>.</td>
+		    </tr>
+		    <tr>
+			<td width="770" align="left">Lookup:<span id="DnsTime"></span> ms + Setup:<span id="SetupTime"></span> ms + Transfer:<span id="TransferTime"></span> ms = <span id="TotalTime"></span> ms</td>
+		    </tr>
+		</table>
+
+		<table border ="1" width="770">
+		    <tr>
+			<th width="350" align="center"></th>
+			<th colspan="3" width="210" align="center">Download</th>
+			<th colspan="3" width="210" align="center">Upload</th>
+		    </tr>
+		    <tr>
+			<th width="290" align="left"></th>
+			<th width="80" align="center">Bytes</th>
+			<th width="80" align="center">Mbps</th>
+			<th width="80" align="center">Packets</th>
+			<th width="80" align="center">Bytes</th>
+			<th width="80" align="center">Mbps</th>
+			<th width="80" align="center">Packets</th>
+		    </tr>
+		    <tr>
+			<th width="290" align="left">Payload</th>
+			<td width="80" align="center"><span id="PayloadRxBytes"> </span></td>
+			<td width="80" align="center"><span id="PayloadRxSpeed"> </span></td>
+			<td width="80" align="center"><span id="PayloadRxPckts"> </span></td>
+			<td width="80" align="center"><span id="PayloadTxBytes"> </span></td>
+			<td width="80" align="center"><span id="PayloadTxSpeed"> </span></td>
+			<td width="80" align="center"><span id="PayloadTxPckts"> </span></td>
+		    </tr>
+		    <tr>
+			<th width="290" align="left">Payload (including overhead)</th>
+			<td width="80" align="center"><span id="FilteredRxBytes"> </span></td>
+			<td width="80" align="center"><span id="FilteredRxSpeed"> </span></td>
+			<td width="80" align="center"><span id="FilteredRxPckts"> </span></td>
+			<td width="80" align="center"><span id="FilteredTxBytes"> </span></td>
+			<td width="80" align="center"><span id="FilteredTxSpeed"> </span></td>
+			<td width="80" align="center"><span id="FilteredTxPckts"> </span></td>
+		    </tr>
+		    <tr>
+			<th width="290" align="left">Total Interface Traffic</th>
+			<td width="80" align="center"><span id="TotalRxBytes"> </span></td>
+			<td width="80" align="center"><span id="TotalRxSpeed"> </span></td>
+			<td width="80" align="center"><span id="TotalRxPckts"> </span></td>
+			<td width="80" align="center"><span id="TotalTxBytes"> </span></td>
+			<td width="80" align="center"><span id="TotalTxSpeed"> </span></td>
+			<td width="80" align="center"><span id="TotalTxPckts"> </span></td>
+		    </tr>
+		    <tr>
+			<th width="290" align="left">Errors</th>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"><div id="ErrorRxPckts"></div></td>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"><div id="ErrorTxPckts"></div></td>
+		    </tr>
+		    <tr>
+			<th width="290" align="left">Dropped</th>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"><span id="DroppedRxPckts"> </span></td>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"></td>
+			<td width="80" align="center"><span id="DroppedTxPckts"> </span></td>
+		    </tr>
+	    </table>
+
+	    <form name="config" method="post" action="" onsubmit="return validateForm()"> 
+		<table width="770" bgColor=#0c055c><tbody>
+		    <tr>
+			<td width="530"><b><font color=#ffffff size=+1>SpeedTest Configuration:</font></b></td>
+			<td width="30"><input type="hidden" name="CurResult"  value=" "></td>
+			<td width="30"><input type="submit" name="Save" value="Save"></td>
+			<td width="30"><input type="submit" name="StartTest" value="Start"></td>
+		    </tr>
+		</tbody></table>
+
+	    Select Test Direction to configure:<select name="Direction" onchange="DirectionChanged(this)"><option value="DownstreamUpstream">Download / Upload</option><option value="Downstream">Download Only</option><option value="Upstream">Upload Only</option></select></td>
+
+            <!-- StartDirectionConfiguration -->
+            <fieldset><legend>Application Layer Settings:</legend>
+                <table border="0" width="740">
+		            <tr>
+                        <td width="200">Test Mode:</td>	                <td colspan="3" width="540"><select name="Mode" onchange="ModeChanged(this)"><option value="FTP">FTP</option><option value="FTP (active)">FTP (active)</option><option value="HTTP">HTTP</option></select></td>
+                    </tr>
+                    <tr>
+                        <td width="200">Server Address:</td>            <td width="170"><input name="Address" type="text"></td>
+                        <td width="200">Server Port:</td>               <td width="170"><input name="Port" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td width="200">Server Username:</td>           <td width="170"><input name="Username" type="text"></td>
+                        <td width="200">Server Password:</td>           <td width="170"><input name="Password" type="password"></td>
+                    </tr>
+                    <tr>
+                        <td width="200">Filename (>=10MB):</td>         <td width="170"><input name="Filename" type="text"></td>
+                        <td width="200">Upload Size (1-100MB):</td>     <td width="170"><input name="UploadSize" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td width="200">Scriptname:</td>                <td width="170"><input name="UploadScript" type="text"></td>
+                        <td width="200">POST fields:</td>               <td width="170"><input name="UploadPostFields" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td width="200">File Field:</td>                <td width="170"><input name="UploadFileField" type="text"></td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <fieldset><legend>Transport Layer Settings:</legend>
+                <table border="0" width="740">
+                    <tr>
+                        <td width="200">TCP Window (63-2048KB):</td>    <td width="170"><input name="TCPWindowSize" type="text"></td>
+                        <td width="200">TCP MSS (536-1500B):</td>       <td width="170"><input name="TCPMSS" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td width="200">TCP Timestamps:</td>            <td width="540" colspan="3"><input type="checkbox" name="TCPTimestamping" value="1"></td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <fieldset><legend>Datalink Layer Settings:</legend>
+                <table border="0" width="740">
+                    <tr>
+                        <td width="200">Path MTU Discovery:</td>        <td width="170"><input type="checkbox" name="PMTUD" value="1" onclick="EnableMTU()"></td>
+                        <td width="200">MTU (64-1518B):</td>            <td width="170"><input name="MTU" type="text"></td>
+                    </tr>
+                </table>
+            </fieldset>
+
+            <!-- EndDirectionConfiguration -->
+
+	    </form>
+			
+	    <!-- END ARRIS PAGE CONTENT -->
+	    </p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+    </div> <!-- wrapper -->
+	 
+    <div class="footer">
+	<?ARRIS_COPYWRITE>
+    </div>
+</body>
+</html>
+

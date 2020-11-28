@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Touchstone Status</title>
+	<meta http-equiv="Pragma" content="no-cache">
+        <SCRIPT language="JavaScript">
+        function clearcounters()
+        {
+            document.clear.submit();
+        }
+        </SCRIPT>
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Status</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+<table bgcolor="#0c055c" cellpadding="0" cellspacing="0" cols="1" width="770">
+<tbody>
+<tr>
+  <td width="770"><b><font color="#ffffff" size="+1">&nbsp;RF Parameters</font></b></td>
+</tr>
+</tbody></table>
+
+
+<h4> Downstream </h4>
+<table border="2" cellpadding="0" cellspacing="0" width="770">
+<tbody>
+<tr>
+  <td></td>
+  <td>DCID</td>
+  <td>Freq</td>
+  <td>Power</td>
+  <td>SNR</td>
+  <td>Modulation</td>
+  <td>Octets</td>
+  <td>Correcteds</td>
+  <td>Uncorrectables</td>
+</tr>
+<?DOWNSTREAM_TABLE>
+</tbody>
+</table>
+<table width="770" border="0"><tr><td align="right">
+<form name="clear" action="status_cgi" method=post>
+    <a href="javascript: clearcounters()">Reset FEC Counters</a>
+</form>
+</td></tr></table>
+<h4> Upstream </h4>
+<table border="2" cellpadding="0" cellspacing="0" width="770">
+<tbody>
+<tr>
+  <td></td>
+  <td>UCID</td>
+  <td>Freq</td>
+  <td>Power</td>
+  <td>Channel Type</td>
+  <td>Symbol Rate</td>
+  <td>Modulation</td>
+</tr>
+<tr>
+<?UPSTREAM_TABLE>
+</tbody>
+</table>
+
+
+<br>
+
+<table bgcolor="#0c055c" cellpadding="0" cellspacing="0" cols="1" width="770"><tbody><tr>
+
+      <td width="770"><b><font color="#ffffff"size="+1">
+&nbsp;Status
+</font></b></td></tr></tbody></table>
+<table cellpadding="0" cellspacing="0">
+<tbody><tr><td width="160">System Uptime: </td><td><?CM_UPTIME></td></tr>
+<tr><td width="160">Computers Detected:</td><td><?CM_NUM_CPE></td></tr>
+<tr><td width="160">CM Status:</td><td><?CM_STATUS></td></tr>
+<tr><td width="160">Time and Date:</td><td><?CM_DATE></td></tr>
+</tbody></table><br>
+<table bgcolor="#0c055c" cellpadding="0" cellspacing="0" cols="1" width="770"><tbody><tr>
+    <td width="770"><b><font color="#ffffff" size="+1">
+    &nbsp;Interface Parameters </font></b></td></tr></tbody></table><table border="2" width="769">
+  <tbody><tr>
+    <td width="100">Interface Name</td>
+    <td width="90">Provisioned</td>
+    <td width="60">State</td>
+    <td width="100">Speed (Mbps)</td>
+    <td width="144">MAC address</td></tr>
+<?CM_LAN_TABLE>
+</tr><tr><td>CABLE</td>
+<td><?CM_CABLE_ADMIN_STATUS></td>
+<td><?CM_CABLE_OPER_STATUS></td>
+<td>-----</td>
+<td><?CM_MAC_ADDR></td>
+</tr><?CM_USB_ADMIN_STATUS><?CM_USB_OPER_STATUS><?CM_USB_MAC>
+
+</tbody></table>
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+

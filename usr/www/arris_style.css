@@ -1,0 +1,68 @@
+html, body {
+		background-color: #ffffff
+		height: 100%;
+        }
+.header {
+		background: url(/top_bar.gif) no-repeat;
+		height: 130px;
+		}
+.header_text {
+		background: url(/logo_t.gif) 0% 40px no-repeat;
+		height: 130px;
+		padding-top: 45px;
+		padding-left: 200px;
+		}
+div#navbar {
+		width: 770px;
+		margin: 0;
+		padding: 0;
+		float: left;
+		background-color: #0c055c;
+		border-top: solid #777 3px;
+		border-bottom: solid #777 3px;
+		}
+div#navbar ul {
+		margin: 0px;
+		padding: 0px;
+		white-space: nowrap;
+		}
+div#navbar li {
+		list-style-type: none;
+		display: inline;
+		}
+div#navbar li a {
+		float: left;
+		width: 20%;
+		text-align: center;
+		text-decoration: none;
+		color: #ffffff;
+		font-size: medium;
+		font-weight: bold;
+		}
+div#navbar li a:hover {
+		color: #FFFFFF;
+		background-color: #DD0000;
+		}
+div#navbar #current a {
+		background-color: #ffff99;
+		color: #000000;
+		}
+div#navbar #current a:hover {
+		background-color: #DD0000;
+		color: #FFFFFF;
+		}
+.main_body {
+		padding-top: 30px;
+		width: 770px;
+		}
+.wrapper {
+		min-height: 100%;
+		height: auto !important;
+		height: 100%;
+		margin: 0 auto -20px;
+		}
+.footer, .push {
+		height: 20px;
+		width: 770px;
+		text-align: center;
+		}

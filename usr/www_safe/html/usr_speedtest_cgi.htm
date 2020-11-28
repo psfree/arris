@@ -1,0 +1,122 @@
+<html>
+<head>
+    <title>Speedtest</title>
+    <meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+    <!--[if IE]>
+        <link rel="stylesheet" href="/arris_style_ie.css">
+    <![endif]-->
+    <script LANGUAGE="JavaScript">
+        function SetTestStatus(content)
+        {
+            document.getElementById("TestStatus").innerHTML=content;
+        }
+        function SetTestConditions(StartTime, StartLines, EndTime, EndLines)
+        {
+            document.getElementById("StartTime").innerHTML=StartTime;
+            document.getElementById("StartLines").innerHTML=StartLines;
+            document.getElementById("EndTime").innerHTML=EndTime;
+            document.getElementById("EndLines").innerHTML=EndLines;
+        }
+        function SetTotalTx(bytes, speed, pckts)
+        {
+            document.getElementById("TxSpeed").innerHTML=speed;
+        }
+        function SetTotalRx(bytes, speed, pckts)
+        {
+            document.getElementById("RxSpeed").innerHTML=speed;
+        }
+        function SetCurRes(val)
+        {
+            document.resultshead.CurResult.value = val;
+        }
+        function DisablePrev()
+        {
+            document.resultshead.PrevResult.disabled = true;
+        }
+        function DisableNext()
+        {
+            document.resultshead.NextResult.disabled = true;
+        }
+        function SetAction(act)
+        {
+            document.resultshead.action = act;
+            document.config.action = act;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+
+	<div class="header">
+	    <div class="header_text">
+		<h1>Speedtest</h1>
+	    </div>
+	</div>
+
+	<div id="navbar">
+	    <ul>
+		<?ARRIS_MENU>
+	    </ul>
+	</div>
+	
+	<div class="main_body">
+	    <p>
+		<!-- INSERT ARRIS PAGE CONTENT HERE -->   
+     
+		<form name="resultshead" method="post" action=""> 
+		    <table width="770" bgColor=#0c055c><tbody>
+			<tr>
+			    <td width="530"><b><font color=#ffffff size=+1>SpeedTest Results: <span id="TestStatus"> </span></font></b></td>
+			    <td width="30"><input type="hidden" name="CurResult"  value=" "></td>
+			    <td width="30"><input type="submit" name="PrevResult" value="Prev"></td>
+			    <td width="30"><input type="submit" name="NextResult" value="Next"></td>
+			</tr>
+		    </tbody></table>
+		</form>
+
+		<table border="0" width="770">
+		    <tr>
+			<td width="770" align="left">Started: <span id="StartTime">n/a</span> <span id="StartLines"></span>.</td>
+		    </tr>
+		    <tr>
+			<td width="770" align="left">Ended:   <span id="EndTime">n/a</span> <span id="EndLines"></span>.</td>
+		    </tr>
+		</table>
+
+		<table border ="1" width="770">
+		    <tr>
+			<th width="350" align="center"></th>
+			<th width="210" align="center">Download (Mbps)</th>
+			<th width="210" align="center">Upload (Mbps)</th>
+		    </tr>
+		    <tr>
+			<th width="350" align="left">Speed</th>
+			<td width="210" align="center"><span id="RxSpeed"> </span></td>
+			<td width="210" align="center"><span id="TxSpeed"> </span></td>
+		    </tr>
+	    </table>
+
+	    <form name="config" method="post" action="" onsubmit="return validateForm()"> 
+		<table width="770" bgColor=#0c055c><tbody>
+		    <tr>
+			<td width="530"><b><font color=#ffffff size=+1>SpeedTest Operation:</font></b></td>
+			<td width="30"><input type="submit" name="StartTest" value="Start"></td>
+		    </tr>
+		</tbody></table>
+	    </form>
+			
+	    <!-- END ARRIS PAGE CONTENT -->
+	    </p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+    </div> <!-- wrapper -->
+	 
+    <div class="footer">
+	<?ARRIS_COPYWRITE>
+    </div>
+</body>
+</html>
+

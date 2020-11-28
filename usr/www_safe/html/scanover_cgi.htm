@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Touchstone Scanning Override</title>
+	<meta http-equiv="Pragma" content="no-cache">
+        <SCRIPT language="JavaScript">
+        </SCRIPT>
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Scanning Override</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+<table border="0"><tbody>
+<tr valign="top">
+			 <td><b>RF Scanning Overrides:</b></td>
+			 <td><b>Clear RF Cache:</b></td>
+</tr>
+<tr valign="top">
+			 <td width="360">
+				<form method="POST" action="scanover_cgi">
+                  Primary Downstream Frequency (MHz) <input name="DS_FREQ_1" size="10"
+				  type="text" value="<?CM_DS_FREQ_1>" maxlength="10"><br>
+
+				  Upstream Channel ID <input name="ucd1" size="3" type="text"
+                  value="<?CM_US_FREQ_1>" maxlength="10"><br>
+
+				  <input name="rf-cfg" value="Change Freq" type="submit"> <input name="rf-save" value="Save Freq" type="submit"><br>
+				</form>
+			 </td>
+			 <td width="260">
+				<form method="POST" action="scanover_cgi">
+				  <input name="scan-reset" value="Clear Now" type="submit"><br>
+                  <font color="#ff0000"><?SCANOVER_RESULT></font><br>
+				</form>
+			 </td>
+</tr>
+</tbody>
+</table>
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+

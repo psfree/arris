@@ -1,0 +1,1701 @@
+############################################################################
+##+----------------------------------------------------------------------+##
+##|                                ####                                  |##
+##|                                ####                                  |##
+##|                                ######o###                            |##
+##|                          ########_///_####                           |##
+##|                           ##### /_//_/ ####                          |##
+##|                            ## ## (__/ ####                           |##
+##|                                #########                             |##
+##|                                 ####                                 |##
+##|                                  ###                                 |##
+##|                                                                      |##
+##|     Copyright (c) 2006 - 2008    Texas Instruments Incorporated      |##
+##|                        ALL RIGHTS RESERVED                           |##
+##|                                                                      |##
+##| Permission is hereby granted to licensees of Texas Instruments       |##
+##| Incorporated (TI) products to use this computer program for the sole |##
+##| purpose of implementing a licensee product based on TI products.     |##
+##| No other rights to reproduce, use, or disseminate this computer      |##
+##| program, whether in part or in whole, are granted.                   |##
+##|                                                                      |##
+##| TI makes no representation or warranties with respect to the         |##
+##| performance of this computer program, and specifically disclaims     |##
+##| any responsibility for any damages, special or consequential,        |##
+##| connected with the use of this program.                              |##
+##|                                                                      |##
+##+----------------------------------------------------------------------+##
+############################################################################
+
+############################################################################
+#
+# PCD Script for DOCSIS Component 
+#
+############################################################################
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_APPRUN
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,SYSTEM_LASTRULE
+
+# Command with parameters
+COMMAND = echo "1" > /var/tmp/app_run
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_BRIDGE
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_APPRUN
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/net/docsis_bridge.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_CNI
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_BRIDGE
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/net/avalanche_cnid.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NETDEVICE,cni0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_INITONCE
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_APPRUN
+
+# Command with parameters
+COMMAND = /usr/sbin/docsis_init_once $init_once_params
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_LED
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_INITONCE,DOCSIS_PP
+
+# Command with parameters
+COMMAND = /usr/sbin/ledd -c -i 500
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active - ARRIS CHANGE
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_HALVLYNQ
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_INITONCE
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/char/hal_vlynq.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_SOCIFDRV
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_HALVLYNQ
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/char/soc_if_driver.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MKNODSOCIFDRV
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_SOCIFDRV
+
+# Command with parameters
+COMMAND = mknod /dev/soc_if_driver c 36 0
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_HALIOV
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/char/hal_iov.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MNG
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MKNODSOCIFDRV
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/char/docsis_mng.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MKNODMNG
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MNG
+
+# Command with parameters
+COMMAND = mknod /dev/docsis_mng c 32 0
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_KINTR
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MNG
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/char/kintr.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = FILE,/dev/DOCINT5
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_HALCMDMBOX
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_KINTR
+
+# Command with parameters
+COMMAND = /usr/sbin/hal_cmd_mbox
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_HALEVENTMBOX
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_KINTR
+
+# Command with parameters
+COMMAND = /usr/sbin/hal_event_mbox
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MLX
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_HALEVENTMBOX,DOCSIS_HALCMDMBOX
+
+# Command with parameters
+COMMAND = /usr/sbin/mlx -d DOCINT -n 8
+
+# Scheduling (priority) of the process
+SCHED = FIFO,45
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_HALTUNERMGR
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MLX
+
+# Command with parameters
+COMMAND = /usr/sbin/hal_tuner_mgr
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_HALREADY
+
+# Condition to start rule, existence of one of the following
+# ARRIS require DBRIDGEINIT to complete before we release the HAL because of dispatcher problem seen with USB environment init
+# after TI code merge 1.2.2.40
+START_COND = RULE_COMPLETED,DOCSIS_HALCMDMBOX,DOCSIS_HALEVENTMBOX,DOCSIS_HALTUNERMGR,DOCSIS_MKNODSOCIFDRV,DOCSIS_DBRIDGEINIT,DOCSIS_PP
+
+
+# Command with parameters
+COMMAND = NONE
+               
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_FILTERCLASS
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MKNODMNG,DOCSIS_BRIDGE
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/net/docsis_fltr_class.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_FCDEV
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_FILTERCLASS
+
+# Command with parameters
+COMMAND = /bin/sh -c dfltr_class_init.sh
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DBRIDGEINIT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_FCDEV,DOCSIS_CNI
+
+# Command with parameters
+COMMAND = /usr/sbin/dbridge_init
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DBRIDGEMDFINIT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_DBRIDGEINIT
+
+# Command with parameters
+COMMAND = /bin/sh -c /usr/sbin/dbridge_mdf_init.sh
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+############### ARRIS INIT RULES ################################
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_INIT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_INITONCE,DOCSIS_DBRIDGEINIT
+
+# Command with parameters
+COMMAND = /usr/sbin/arris_init
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+
+#################################################################
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_LED
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/ledd -c -i 500
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active - ARRIS CHANGE
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_GW_INIT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/sercomm_init
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_GW_EXIT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /var/remove_gw.sh
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_TELNET
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = utelnetd -l /usr/sbin/mini_cli
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_DROPBEAR
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = dropbear -E -F -r /etc/rsa_key.priv
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_WEBSERVER
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/ti_webserver -plugin https_plugin.so -plugin http_plugin.so  -d /usr/www -c cgi-bin  
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active 
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_DHCP_SERV
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /sbin/udhcpd
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active 
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_KLOGD
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,SYSTEM_LOGGER
+
+# Command with parameters
+COMMAND = /usr/sbin/arris_klogd
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active 
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_RIPLOGD
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,SYSTEM_LOGGER
+
+# Command with parameters
+COMMAND = /usr/sbin/arris_riplogd
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active 
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_SPEEDTEST
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = speedtest
+
+# Scheduling (priority) of the process
+SCHED = NICE,-20
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active 
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_NPM_NETL
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = udpping
+
+# Scheduling (priority) of the process
+SCHED = NICE,-20
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active 
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_TLM
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/tlm
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = NO
+
+########## END ARRIS INIT RULES #################################
+# Index of the rule
+RULE = DOCSIS_DBRIDGEL2VPNDSINIT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_DBRIDGEINIT
+
+# Command with parameters
+COMMAND = /bin/sh -c /usr/sbin/dbridge_l2vpn_ds_init.sh
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_PP
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_DBRIDGEMDFINIT
+
+# Command with parameters
+COMMAND = insmod /lib/modules/2.6.18_pro500/drivers/net/docsis_pp.ko
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_PPDEV
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_PP
+
+# Command with parameters
+COMMAND = /bin/sh -c dpp_dev_init.sh
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_BPIAUTH
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_HALREADY
+
+# Command with parameters
+COMMAND = /usr/sbin/bpi_auth
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_BPITEK
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_BPIAUTH
+
+# Command with parameters
+COMMAND = /usr/sbin/bpi_tek
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_BPISAMAP
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_BPIAUTH
+
+# Command with parameters
+COMMAND = /usr/sbin/bpi_sa_map
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_SNMPAGENT
+
+# Condition to start rule, existence of one of the following   # ARRIS MODIFY  ADD DOCSIS_ARRIS_INIT
+  
+START_COND = RULE_COMPLETED,DOCSIS_HALREADY,DOCSIS_DBRIDGEINIT,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/snmp_agent_cm -c /etc/agent_cm.cnf -n
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = 30000
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_EVENTMNGR
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_SNMPAGENT
+
+# Command with parameters
+COMMAND = /usr/sbin/eventmgr_cm
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_QOSDSXSM
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_HALREADY,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/qos_dsx_sm
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DISPATCHER
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_HALREADY,DOCSIS_MKNODMNG
+
+# Command with parameters
+COMMAND = /usr/sbin/dispatcher
+
+# Scheduling (priority) of the process
+SCHED = FIFO,40
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MACDRIVER
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_DISPATCHER,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = /usr/sbin/docsis_mac_driver $dmd_params
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MACMANAGER
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MACDRIVER,DOCSIS_CMSTATUS,DOCSIS_BPITEK,DOCSIS_EVENTMNGR,DOCSIS_QOSDSXSM,DOCSIS_BPISAMAP,DOCSIS_PPDEV,DOCSIS_ARRIS_LED
+# ARRIS ADD - DOCSIS_ARRIS_LED
+
+# Command with parameters
+COMMAND = /usr/sbin/docsis_mac_manager $dmg_params
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_CMSTATUS
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_INITONCE
+
+# Command with parameters
+COMMAND = /usr/sbin/cm_status
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = YES
+
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DMGPROV
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /usr/sbin/dmg_provisioning
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DSMNGR$
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /usr/sbin/downstream_manager
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_USMNGR$
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /usr/sbin/upstream_manager
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DHCPV4
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /sbin/ti_udhcpc
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_DHCPV6
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /sbin/ti_dhcp6c
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = REBOOT
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_SWDL
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /usr/sbin/sw_dl
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = EXIT,0
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_MPT_INT
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_HALREADY
+
+# Command with parameters
+COMMAND = /usr/sbin/mptint
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = NO
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_LASTRULE
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_MACMANAGER
+
+# Command with parameters
+COMMAND = NONE
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_NPM_DNSL
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = dns_latency
+
+# Scheduling (priority) of the process
+SCHED = NICE,-20
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active 
+ACTIVE = NO
+
+#################################################################
+
+#################################################################
+
+# Index of the rule
+RULE = DOCSIS_ARRIS_NPM_WEBDL
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,DOCSIS_ARRIS_INIT
+
+# Command with parameters
+COMMAND = webdl_test
+
+# Scheduling (priority) of the process
+SCHED = NICE,-20
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active 
+ACTIVE = NO
+
+#################################################################
+

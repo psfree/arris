@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Product Details</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Product Details</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+    <table CELLSPACING=0 CELLPADDING=0 >
+        <tr><td width="160">CM Status:</td><td><?CM_STATUS></td></tr>
+
+    </table><br>
+    <TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c><TBODY><TR>
+    <TD width=770><B><FONT color=#ffffff size=+1>
+    &nbsp;IP and MAC ADDR PARAMETERS </FONT></B></TD></TR></TBODY></TABLE>
+    <TABLE width=769 border=2>
+    <TR>
+    <TD width="120">Interface Name</TD>
+    <TD width="90">Provisioned</TD>
+    <TD width="60">State</TD>
+    <TD width="90">Speed</TD>
+    <TD width="160">MAC address</TD>
+    <TD width="110">IP address</TD>
+    <td width="140">Subnet Mask</TR>
+    </TR>
+            <?CM_LAN_TABLE>
+            <TR><TD>CABLE</TD>
+            <TD><?CM_WAN_PROVISIONED></TD>
+            <TD><?CM_WAN_STATE></TD>
+            <TD>-----</TD>
+            <TD><?CM_WAN_MAC></TD>
+            <TD<?CM_WAN_COLSPAN>><?CM_WAN_IP></TD>
+            <?CM_WAN_SUBNET>
+            </TR>
+            <?CM_USB_PROVISIONED>
+            <?CM_USB_STATE>
+            <?CM_USB_SPEED>
+            <?CM_USB_MAC>
+            <?CM_USB_IP>
+            <?CM_USB_SUBNET>
+            </table><br><TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c>
+            <TBODY>
+
+            <TR>
+            <TD width=770><B><FONT color=#ffffff size=+1>&nbsp;Product Type
+            </FONT></B></TD></TR></TBODY></TABLE>
+        </table><b>Product Type:</b> <?UPPER_PRODUCT_TYPE> <?PRODUCT_TYPE> 
+            <table CELLSPACING=0 CELLPADDING=0 >
+                <tr><td width="160">Hardware Model</td><td><?HW_MODEL></td></tr>
+                <tr><td width="160">Hardware Info</td><td><?HW_INFO></td></tr>
+                <tr><td width="160">Ethernet</td><td><?ETHERNET_HW></td></tr>
+                <tr><td width="160">Ethernet Phy Type</td><td><?ETHERNET_PHY_TYPE></td></tr>
+                <tr><td width="160">USB</td><td><?USB_HW></td></tr>
+                <tr><td width="160">Router</td><td><?ROUTER_HW></td></tr>
+                <tr><td width="160">Telemetry</td><td><?TELEMETRY_HW></td></tr>
+                <tr><td width="160">RF HW</td><td><?TUNER_HW></td></tr>
+                <tr><td width="160">Market</td><td><?MARKET></td></tr>
+        </table><br>
+        <TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c>
+        <TBODY>
+        <TR>
+        <TD width=770><B><FONT color=#ffffff size=+1>&nbsp;Component Logging Levels</FONT></B></TD></TR></TBODY></TABLE>
+    </table>
+    <?REPORT_LEVELS>
+        <TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c>
+        <TBODY>
+        <TR>
+        <TD width=770><B><FONT color=#ffffff size=+1>&nbsp;Severity Levels</FONT></B></TD></TR></TBODY></TABLE>
+    </table>
+    <table CELLSPACING=0 CELLPADDING=0 >
+        <?SEVERITY_LEVELS>
+    </table>
+    	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+

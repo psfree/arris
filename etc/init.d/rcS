@@ -1,0 +1,145 @@
+#! /bin/sh
+#
+# rcS           Call all S??* scripts in /etc/rcS.d in
+#               numerical/alphabetical order.
+#
+# Version:      @(#)/etc/init.d/rcS  2.76  19-Apr-1999  miquels@cistron.nl
+#
+trap "" SIGHUP
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+runlevel=S
+prevlevel=N
+umask 022
+export PATH runlevel prevlevel
+
+#
+#       Trap CTRL-C &c only in this shell so we can interrupt subprocesses.
+#
+trap ":" INT QUIT TSTP
+
+mount -n /proc
+mount /var
+mount /sys
+mount /dev
+mkdir /dev/pts
+mount /dev/pts
+
+(cd /; tar xf var.tar)
+
+# setup local interface
+/sbin/ifconfig lo 127.0.0.1
+
+# If using hotplug, need to use udev
+if test -f /proc/sys/kernel/hotplug
+then 
+    echo "/sbin/udev" > /proc/sys/kernel/hotplug
+fi
+
+# If hwclock program is present, sync the system time with RTC time
+if test -f /sbin/hwclock
+then
+    udevstart 
+    /sbin/hwclock -s
+fi
+
+udevstart
+
+# Mount the NVRAM partition
+mount /nvram
+
+# Setup hostname
+echo "ARRIS DOCSIS 3.0 - Touchstone Gateway Modem" > /proc/sys/kernel/hostname
+
+# ARRIS CHANGE - change startup banner
+echo ""
+echo "========================================================"
+echo "ARRIS Touchstone Docsis 3.0 Firmware"
+echo "Build release "TS070593_060313_WBM760_CM820""
+echo "Build date: Monday, June 03 2013, 13:04:53"
+echo "Copyright (c) 2007 - 2011 ARRIS Group Inc."
+echo "========================================================"
+echo ""
+# END ARRIS CHANGE
+
+if test -f /nvram/0/sys_setup.sh
+then
+    # Start alternative system start up
+    source /nvram/0/sys_setup.sh
+else 
+    # Start default system start up
+    
+    # Disable low priority prints from the Kernel
+# ARRIS let kernel init to desired level
+#    echo 5 > /proc/sys/kernel/printk
+    
+    # Setup IPv6 default parameters
+    echo 0 > /proc/sys/net/ipv6/conf/default/autoconf
+    echo 0 > /proc/sys/net/ipv6/conf/default/dad_transmits
+    echo 0 > /proc/sys/net/ipv6/conf/default/accept_ra
+    echo 0 > /proc/sys/net/ipv6/conf/default/accept_redirects
+    echo 0 > /proc/sys/net/ipv6/conf/default/router_solicitations
+    
+    # Start ICC service
+    if test -f /usr/sbin/iccctl
+    then
+        /usr/sbin/iccctl start
+    fi
+fi
+
+# Validity checks - Automatically find and run all check files
+check_files=`ls -1 /etc/scripts/*_check.sh` 2> /dev/null
+
+# Run all check scripts in /etc/init.d/scripts.
+# The rcS will monitor the return values of the check scripts,
+# Where 0 is ok, 1 to run CLI and reboot, 2 to reboot only.
+for curfile in $check_files
+do
+	# ARRIS ADD
+	echo Running $curfile...
+	# END ARRIS ADD
+
+    $curfile
+
+	# ARRIS CHANGE - Change option 1 to testmode
+	# Test return values
+	case $? in
+		"1") /usr/sbin/testmode;;
+		"2") reboot;;
+	esac
+	# END ARRIS CHANGE
+done
+
+# ARRIS CHANGE - Default to testmode if the check scripts don't init things for some reason.
+# Start up
+if test -f /usr/sbin/nvread
+then
+    enable_startup=`nvread 0.0.2 long`   
+    if [ $enable_startup -ne 0 ]; then \
+        startup_file=`nvread 0.0.1 str`; 
+    else    
+        startup_file=/usr/sbin/testmode;  
+    fi
+else
+    startup_file=/usr/sbin/testmode; 
+fi
+# END ARRIS CHANGE
+
+# ARRIS ADD
+echo ----------------------------------------------------------
+echo Enable_Startup = $enable_startup
+echo Startup_File = $startup_file
+echo ----------------------------------------------------------
+# END ARRIS ADD
+
+# If startup is disabled, run the watchdog manually
+if [ -z $startup_file ]; then
+# ARRIS run testmode instead of watchdog
+    exec /usr/sbin/testmode
+#    exec watchdog_rt -t 15 /dev/watchdog
+else
+    # Run the startup file
+    exec $startup_file
+fi
+
+

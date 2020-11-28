@@ -1,0 +1,111 @@
+#!/bin/sh 
+#-x
+
+# Directory on target. Remote mount is to here.
+mntdir="/var/tmp/RemoteFS"
+
+# File holding RFS config
+# RFS_config_file is exported from rcS
+export RFS_config_file=/nvram/debug/rfs.cfg
+
+# IP of host
+hostip=$(grep -v \# $RFS_config_file | grep RFS_HOSTIP | cut -f 2 -d=) 
+#echo $hostip
+if [ -z "$hostip" ]; then
+    hostip=192.168.1.2
+fi
+
+
+# Name of mount on host
+hostmntdir=$(grep -v \# $RFS_config_file | grep RFS_HOSTMNTDIR | cut -f 2 -d=) 
+#echo $hostmntdir
+if [ -z "$hostmntdir" ]; then
+    hostmntdir="/cygdrive/c/nfsshare"
+    #hostmntdir="/public"
+fi
+
+# Dir on mount where FS resides
+fsdirext=$(grep -v \# $RFS_config_file | grep RFS_FSDIREXT | cut -f 2 -d=) 
+#echo $fsdirext
+if [ -z "$fsdirext" ]; then
+    fsdirext="build/fs"
+fi
+
+# Dir on target where FS resides
+#fsdir=$mntdir/$fsdirext
+
+# Create eth0:1
+eth0ip=$(grep -v \# $RFS_config_file | grep RFS_ETH0IP | cut -f 2 -d=) 
+if [ -z "$eth0ip" ]; then
+    eth0ip=192.168.1.1
+elif [ "$eth0ip" == "NO_ETH_SETUP" ]; then
+    unset eth0ip
+fi
+if [ ! -z "$eth0ip" ]; then
+    echo Setting up eth0 ...
+    ifconfig eth0 $eth0ip promisc
+    # Wait till inteface is setup
+    sleep 5
+fi
+
+# Make mount dir
+mkdir $mntdir
+
+# Mount fs onto target
+echo Mounting $hostip:$hostmntdir/$fsdirext to $mntdir
+mount -o nolock,nfsvers=2 $hostip:$hostmntdir/$fsdirext $mntdir
+
+# Goto mount
+#cd $fsdir
+cd $mntdir
+
+# Create /dev
+mkdir dev 2>/dev/null
+mount /dev dev -o bind
+
+# Get source for /var
+cp /var.tar . 
+
+# Unmount /nvram, since it is not correctly visible after the chroot.
+# The nvram is remounted within the chroot login script
+umount /nvram
+
+# chroot 
+
+# There are some commands that have to be executed after the chroot
+# This cannot be done from the script, since the chroot goes into an intercactive shell
+# Therefore we create a shell login script, and it runs when chroot runs its shell
+
+# Shell login script file name
+shrc=./.profile
+rm -f $shrc
+
+# Create /proc
+echo "mount -n /proc" >> $shrc
+# Create /var
+echo "mount /var" >> $shrc
+# Create /sys
+echo "mount /sys" >> $shrc
+# Create files on /var
+echo "tar -vxf /var.tar > /dev/null" >> $shrc
+# Remount nvram
+echo "mount /nvram > /dev/null" >> $shrc
+# Echo done
+echo "echo RemoteFS : / mounted on "$hostmntdir >> $shrc
+# If we are running with RFS, we must run ICC and the logger again.
+echo "iccctl start" >> $shrc
+# AutoRun
+if [ ! -z "$1" ]; then
+    echo $1 >> $shrc
+fi
+
+chmod +x $shrc
+
+# stop ICC, restart when chrooting
+iccctl stop
+
+echo chrooting
+# Use --login to force executing of login shell. Otherwise, it is not executed (ash)
+chroot . /bin/sh --login
+
+

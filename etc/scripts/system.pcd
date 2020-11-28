@@ -1,0 +1,147 @@
+#################################################################
+
+# Index of the rule
+RULE = SYSTEM_WATCHDOG
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /usr/sbin/watchdog_rt -t 10 /dev/watchdog -n
+
+# Scheduling (priority) of the process
+SCHED = FIFO,99
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = SYSTEM_LOGGER
+
+# Condition to start rule, existence of one of the following
+START_COND = NONE
+
+# Command with parameters
+COMMAND = /usr/sbin/logger --no-fork
+
+# Scheduling (priority) of the process
+SCHED = NICE,19
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+#################################################################
+
+# Index of the rule
+RULE = SYSTEM_GIM
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,SYSTEM_LOGGER
+
+# Command with parameters
+COMMAND = /usr/sbin/gim
+
+# Scheduling (priority) of the process
+SCHED = FIFO,1
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = SYSTEM_GPTIMER
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,SYSTEM_LOGGER
+
+# Command with parameters
+COMMAND = /usr/sbin/gptimer --timer-tick=50
+
+# Scheduling (priority) of the process
+SCHED = FIFO,1
+
+# Daemon flag - Process must not end
+DAEMON = YES
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = PROCESS_READY
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = RESTART
+
+# Active
+ACTIVE = YES
+
+#################################################################
+
+# Index of the rule
+RULE = SYSTEM_LASTRULE
+
+# Condition to start rule, existence of one of the following
+START_COND = RULE_COMPLETED,SYSTEM_GPTIMER,SYSTEM_GIM
+
+# Command with parameters
+COMMAND = NONE
+
+# Scheduling (priority) of the process
+SCHED = NICE,0
+
+# Daemon flag - Process must not end
+DAEMON = NO
+
+# Condition to end rule and move to next rule, wait for one of the following:
+END_COND = NONE
+
+# Timeout for end condition. Fail if timeout expires
+END_COND_TIMEOUT = -1
+
+# Action upon failure, do one of the following actions upon failure
+FAILURE_ACTION = NONE
+
+# Active
+ACTIVE = YES
+

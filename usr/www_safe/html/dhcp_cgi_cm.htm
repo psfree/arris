@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>DHCP Parameters</title>
+	<meta http-equiv="Pragma" content="no-cache">
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>DHCP Parameters</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+    <TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c><TBODY><TR>
+    <TD width=770><B><FONT color=#ffffff size=+1>
+    &nbsp;SOFTWARE VERSION
+    </FONT></B></TD></TR></TBODY></TABLE>
+
+    <table CELLSPACING=0 CELLPADDING=0 >
+        <tr><td width="180">Firmware Name</td><td><?FW_NAME></td></tr>
+        <tr><td>Software Filename</td><td><?SW_FILENAME></td></tr>
+    </table><br><TABLE cellSpacing=0 cols=1 cellPadding=0 width=770 bgColor=#0c055c><TBODY><TR>
+    <TD width=770><B><FONT color=#ffffff size=+1>
+
+    &nbsp;CM DHCP PARAMETERS
+    </FONT></B></TD></TR></TBODY></TABLE>
+    <table CELLSPACING=0 CELLPADDING=0 >
+        <tr>
+            <td width=180>CM IP Addr</td>
+            <td width=200><?CM_IP_ADDR></td>
+            <td COLSPAN=2>DHCP - CM IP Time Remaining</td>
+        </tr>
+        <tr>
+            <td width=180><?CM_SUBNET></td>
+            <td width=120>Lease:</td>
+            <td width=310><?CM_LEASE_TIME></td></tr>
+        <tr>
+            <td>CM IP Gateway</td>
+            <td><?CM_IP_GATEWAY></td>
+            <td>Rebind:</td>
+            <td><?CM_REBIND_TIME></td></tr>
+        <tr>
+            <td>CM TFTP Server</td>
+            <td><?CM_TFTP_SERVER></td>
+            <td>Renew:</td>
+            <td><?CM_RENEW_TIME></td></tr> 
+        <tr><td>CM Time Server</td>
+            <td><?CM_TIME_SERVER></td>
+            <td>MDD IP Override:</td>
+            <td><?CM_MDD_OVERRIDE></td></tr>
+        <tr><td>CM Time Offset</td>
+            <td><?CM_TIME_OFFSET></td>
+            <td>MDD IP Mode:</td>
+            <td><?CM_MDD_IPMODE></td>
+        </tr>
+    <tr><td>CM Boot file</td><td ><?CM_CONFIG_FILE></td>  </tr>
+    <tr> <td> CM Dhcp State : </td> <td> <?CM_DHCP_STATE></td> </tr>
+    </table><br><br>
+
+    <table>
+        <tr valign="top"><td><a href="dhcp_cmLog_cgi">CM-DHCP</a></td>
+
+            <form method="post" action="dhcp_cgi">
+                <td><input type="submit" <?CM_DHCP>></td>
+                <td><input type="submit" name="cmClear" value="Clear"></td>
+            </form>
+        </tr>
+    </table>
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+

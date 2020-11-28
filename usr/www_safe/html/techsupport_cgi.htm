@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC
+"-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Touchstone Technical Support</title>
+	<meta http-equiv="Pragma" content="no-cache">
+        <SCRIPT language="JavaScript">
+        </SCRIPT>
+    <link rel="stylesheet" href="/arris_style.css">
+</head>
+
+<body>
+<div class="wrapper">
+
+	<div class="header">
+	<div class="header_text">
+		<h1>Technical Support</h1>
+	</div>
+	</div>
+
+	<div id="navbar">
+	<ul>
+	<?ARRIS_MENU>
+	</ul>
+	</div>
+	
+	<div class="main_body">
+	<p>
+	<!-- INSERT ARRIS PAGE CONTENT HERE -->
+	
+<form method="POST" action="tech_support_cgi">
+
+<table border="0" width="700">
+  <tbody><tr>
+    <td width="236"><font face="Arial">Arris Password</font></td>
+    <td width="165"><input name="pwd" size="12" type="password" maxlength="10"></td>
+    <td width="700"><font color="#ff0000"><?ARRIS_PWOD></font></td>
+  </tr>
+  <tr>
+    <td width="236"><font face="Arial">Telnet Status</font></td>
+    <td width="205">
+	   <select name="modemTelnetSwitch" size="1">
+        <?TELNET_ACCESS>
+		</select> 
+	 </td> 
+  </tr>
+  <tr>
+    <td width="236"><font face="Arial">SSH Status</font></td>
+    <td width="205">
+	   <select name="modemSSHSwitch" size="1">
+        <?SSH_ACCESS>
+		</select> 
+	 </td> 
+  </tr>
+  <tr>
+   <td width="236"><font face="Arial">Http LAN Access</font></td>
+   <td width="165">
+     <select name="LanHttpAccess" size="1">
+	    <?LAN_HTTP_ACCESS>
+     </select>
+    </td>
+  </tr>
+  <tr>
+   <td width="236"><font face="Arial">Http WAN Access</font></td>
+   <td width="165">
+     <select name="WanHttpAccess" size="1">
+	    <?WAN_HTTP_ACCESS>
+     </select>
+    </td>
+  </tr>
+<tr>
+   <td width="236"><font face="Arial">Advanced Web Access</font></td>
+   <td width="165">
+     <select name="AdvWebAccess" size="1">
+	    <?ADV_WEB_ACCESS>
+     </select>
+    </td>
+  </tr>
+</tbody></table>
+<p><br>
+<input name="submit1" value="Submit Request" type="submit">
+<input name="submit2" value="Reset Session" type="submit">
+<input value="Present Settings" type="reset">
+</p>
+	
+	<!-- END ARRIS PAGE CONTENT -->
+	</p>
+	</div> <!-- main_body -->
+
+	<div class="push"></div>
+</div> <!-- wrapper -->
+	 
+<div class="footer">
+    <?ARRIS_COPYWRITE>
+</div>
+</body>
+</html>
+
+
